@@ -1,7 +1,9 @@
 package com.fitforge.app.di
 
 import com.fitforge.app.data.repository.OnboardingRepositoryImpl
+import com.fitforge.app.data.repository.WelcomeRepositoryImpl
 import com.fitforge.app.domain.repository.OnboardingRepository
+import com.fitforge.app.domain.repository.WelcomeRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,4 +16,9 @@ abstract class RepositoryModule {
     abstract fun bindOnboardingRepository(
         onboardingRepositoryImpl: OnboardingRepositoryImpl,
     ): OnboardingRepository
+
+    @Binds
+    abstract fun bindWelcomeRepository(
+        welcomeRepositoryImpl: WelcomeRepositoryImpl,
+    ): WelcomeRepository
 }

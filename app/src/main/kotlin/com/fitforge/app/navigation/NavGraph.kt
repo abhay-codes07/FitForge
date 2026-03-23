@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.fitforge.app.presentation.onboarding.splash.SplashScreen
 import com.fitforge.app.presentation.onboarding.splash.SplashViewModel
+import com.fitforge.app.presentation.onboarding.welcome.WelcomeScreen
+import com.fitforge.app.presentation.onboarding.welcome.WelcomeViewModel
 
 @Composable
 fun NavGraph() {
@@ -22,7 +24,20 @@ fun NavGraph() {
             val uiState = viewModel.uiState.collectAsStateWithLifecycle()
             SplashScreen(
                 uiState = uiState.value,
-                onSplashFinished = { },
+                onSplashFinished = { route ->
+                    navController.navigate(route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                },
+            )
+        }
+        composable(Screen.Welcome.route) {
+            val viewModel: WelcomeViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            WelcomeScreen(
+                uiState = uiState.value,
+                onGetStarted = viewModel::onGetStartedClick,
+                onNavigateNext = { },
             )
         }
     }
