@@ -79,6 +79,18 @@ class UserPrefs @Inject constructor(
         }
         .map { prefs -> prefs[Keys.FitnessLevel] ?: FitnessLevel.UNSPECIFIED }
 
+    val workoutLocations: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.WorkoutLocations] ?: emptySet() }
+
+    val availableEquipment: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.AvailableEquipment] ?: emptySet() }
+
     suspend fun setOnboardingComplete(completed: Boolean) {
         dataStore.edit { prefs -> prefs[Keys.OnboardingComplete] = completed }
     }
@@ -115,6 +127,14 @@ class UserPrefs @Inject constructor(
         dataStore.edit { prefs -> prefs[Keys.FitnessLevel] = value }
     }
 
+    suspend fun setWorkoutLocations(values: Set<String>) {
+        dataStore.edit { prefs -> prefs[Keys.WorkoutLocations] = values }
+    }
+
+    suspend fun setAvailableEquipment(values: Set<String>) {
+        dataStore.edit { prefs -> prefs[Keys.AvailableEquipment] = values }
+    }
+
     private object Keys {
         val OnboardingComplete = booleanPreferencesKey("onboarding_complete")
         val ThemePreference = stringPreferencesKey("theme_preference")
@@ -125,6 +145,8 @@ class UserPrefs @Inject constructor(
         val AgeValue = floatPreferencesKey("age_value")
         val GenderValue = stringPreferencesKey("gender_value")
         val FitnessLevel = stringPreferencesKey("fitness_level")
+        val WorkoutLocations = stringSetPreferencesKey("workout_locations")
+        val AvailableEquipment = stringSetPreferencesKey("available_equipment")
     }
 
     object ThemePreference {
@@ -150,6 +172,23 @@ class UserPrefs @Inject constructor(
         const val INTERMEDIATE = "intermediate"
         const val ADVANCED = "advanced"
         const val UNSPECIFIED = "unspecified"
+    }
+
+    object WorkoutLocation {
+        const val HOME = "home"
+        const val GYM = "gym"
+        const val OUTDOOR = "outdoor"
+    }
+
+    object Equipment {
+        const val NONE = "none"
+        const val DUMBBELLS = "dumbbells"
+        const val RESISTANCE_BANDS = "resistance_bands"
+        const val KETTLEBELL = "kettlebell"
+        const val BARBELL = "barbell"
+        const val BENCH = "bench"
+        const val TREADMILL = "treadmill"
+        const val YOGA_MAT = "yoga_mat"
     }
 
     private companion object {

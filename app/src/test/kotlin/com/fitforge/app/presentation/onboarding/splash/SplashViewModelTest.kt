@@ -92,5 +92,9 @@ class SplashViewModelTest {
         override suspend fun setGenderValue(value: String) = Unit
         override suspend fun getFitnessLevel(): String = "unspecified"
         override suspend fun setFitnessLevel(value: String) = Unit
+        override suspend fun getWorkoutLocations(): Set<String> = emptySet()
+        override suspend fun setWorkoutLocations(values: Set<String>) = Unit
+        override suspend fun getAvailableEquipment(): Set<String> = emptySet()
+        override suspend fun setAvailableEquipment(values: Set<String>) = Unit
     }
 }

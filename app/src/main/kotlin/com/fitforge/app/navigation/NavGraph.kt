@@ -16,6 +16,8 @@ import com.fitforge.app.presentation.onboarding.splash.SplashScreen
 import com.fitforge.app.presentation.onboarding.splash.SplashViewModel
 import com.fitforge.app.presentation.onboarding.welcome.WelcomeScreen
 import com.fitforge.app.presentation.onboarding.welcome.WelcomeViewModel
+import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesScreen
+import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesViewModel
 
 @Composable
 fun NavGraph() {
@@ -82,6 +84,19 @@ fun NavGraph() {
             FitnessLevelScreen(
                 uiState = uiState.value,
                 onFitnessLevelSelected = viewModel::onFitnessLevelSelected,
+                onContinue = viewModel::onContinueClick,
+                onNavigateNext = { route ->
+                    navController.navigate(route)
+                },
+            )
+        }
+        composable(Screen.WorkoutPreferences.route) {
+            val viewModel: WorkoutPreferencesViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            WorkoutPreferencesScreen(
+                uiState = uiState.value,
+                onLocationToggle = viewModel::onLocationToggle,
+                onEquipmentToggle = viewModel::onEquipmentToggle,
                 onContinue = viewModel::onContinueClick,
                 onNavigateNext = { },
             )

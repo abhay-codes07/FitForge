@@ -92,13 +92,10 @@ class GoalSelectionViewModelTest {
         var savedGoals: Set<String> = initialGoals
 
         override suspend fun isOnboardingComplete(): Boolean = false
-
         override suspend fun getSelectedGoals(): Set<String> = savedGoals
-
         override suspend fun setSelectedGoals(values: Set<String>) {
             savedGoals = values
         }
-
         override suspend fun getPreferredUnitSystem(): String = "metric"
         override suspend fun setPreferredUnitSystem(value: String) = Unit
         override suspend fun getHeightValue(): Float? = null
@@ -111,5 +108,9 @@ class GoalSelectionViewModelTest {
         override suspend fun setGenderValue(value: String) = Unit
         override suspend fun getFitnessLevel(): String = "unspecified"
         override suspend fun setFitnessLevel(value: String) = Unit
+        override suspend fun getWorkoutLocations(): Set<String> = emptySet()
+        override suspend fun setWorkoutLocations(values: Set<String>) = Unit
+        override suspend fun getAvailableEquipment(): Set<String> = emptySet()
+        override suspend fun setAvailableEquipment(values: Set<String>) = Unit
     }
 }
