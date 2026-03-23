@@ -15,4 +15,34 @@ class OnboardingRepositoryImpl @Inject constructor(
     override suspend fun setSelectedGoals(values: Set<String>) {
         userPrefs.setSelectedGoals(values)
     }
+
+    override suspend fun getPreferredUnitSystem(): String = userPrefs.preferredUnitSystem.first()
+
+    override suspend fun setPreferredUnitSystem(value: String) {
+        userPrefs.setPreferredUnitSystem(value)
+    }
+
+    override suspend fun getHeightValue(): Float? = userPrefs.heightValue.first()
+
+    override suspend fun setHeightValue(value: Float) {
+        userPrefs.setHeightValue(value)
+    }
+
+    override suspend fun getWeightValue(): Float? = userPrefs.weightValue.first()
+
+    override suspend fun setWeightValue(value: Float) {
+        userPrefs.setWeightValue(value)
+    }
+
+    override suspend fun getAgeValue(): Float? = userPrefs.ageValue.first()
+
+    override suspend fun setAgeValue(value: Float) {
+        userPrefs.setAgeValue(value)
+    }
+
+    override suspend fun getGenderValue(): String = userPrefs.genderValue.first()
+
+    override suspend fun setGenderValue(value: String) {
+        userPrefs.setGenderValue(value)
+    }
 }

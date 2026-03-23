@@ -98,6 +98,16 @@ class GoalSelectionViewModelTest {
         override suspend fun setSelectedGoals(values: Set<String>) {
             savedGoals = values
         }
+
+        override suspend fun getPreferredUnitSystem(): String = "metric"
+        override suspend fun setPreferredUnitSystem(value: String) = Unit
+        override suspend fun getHeightValue(): Float? = null
+        override suspend fun setHeightValue(value: Float) = Unit
+        override suspend fun getWeightValue(): Float? = null
+        override suspend fun setWeightValue(value: Float) = Unit
+        override suspend fun getAgeValue(): Float? = null
+        override suspend fun setAgeValue(value: Float) = Unit
+        override suspend fun getGenderValue(): String = "unspecified"
+        override suspend fun setGenderValue(value: String) = Unit
     }
 }
-

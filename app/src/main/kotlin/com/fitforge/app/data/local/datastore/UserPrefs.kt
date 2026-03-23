@@ -3,6 +3,7 @@ package com.fitforge.app.data.local.datastore
 import android.content.Context
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
@@ -42,6 +43,36 @@ class UserPrefs @Inject constructor(
         }
         .map { prefs -> prefs[Keys.SelectedGoals] ?: emptySet() }
 
+    val preferredUnitSystem: Flow<String> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.PreferredUnitSystem] ?: UnitSystem.METRIC }
+
+    val heightValue: Flow<Float?> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.HeightValue] }
+
+    val weightValue: Flow<Float?> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.WeightValue] }
+
+    val ageValue: Flow<Float?> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.AgeValue] }
+
+    val genderValue: Flow<String> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.GenderValue] ?: Gender.UNSPECIFIED }
+
     suspend fun setOnboardingComplete(completed: Boolean) {
         dataStore.edit { prefs -> prefs[Keys.OnboardingComplete] = completed }
     }
@@ -54,16 +85,53 @@ class UserPrefs @Inject constructor(
         dataStore.edit { prefs -> prefs[Keys.SelectedGoals] = values }
     }
 
+    suspend fun setPreferredUnitSystem(value: String) {
+        dataStore.edit { prefs -> prefs[Keys.PreferredUnitSystem] = value }
+    }
+
+    suspend fun setHeightValue(value: Float) {
+        dataStore.edit { prefs -> prefs[Keys.HeightValue] = value }
+    }
+
+    suspend fun setWeightValue(value: Float) {
+        dataStore.edit { prefs -> prefs[Keys.WeightValue] = value }
+    }
+
+    suspend fun setAgeValue(value: Float) {
+        dataStore.edit { prefs -> prefs[Keys.AgeValue] = value }
+    }
+
+    suspend fun setGenderValue(value: String) {
+        dataStore.edit { prefs -> prefs[Keys.GenderValue] = value }
+    }
+
     private object Keys {
         val OnboardingComplete = booleanPreferencesKey("onboarding_complete")
         val ThemePreference = stringPreferencesKey("theme_preference")
         val SelectedGoals = stringSetPreferencesKey("selected_goals")
+        val PreferredUnitSystem = stringPreferencesKey("preferred_unit_system")
+        val HeightValue = floatPreferencesKey("height_value")
+        val WeightValue = floatPreferencesKey("weight_value")
+        val AgeValue = floatPreferencesKey("age_value")
+        val GenderValue = stringPreferencesKey("gender_value")
     }
 
     object ThemePreference {
         const val LIGHT = "light"
         const val DARK = "dark"
         const val SYSTEM = "system"
+    }
+
+    object UnitSystem {
+        const val METRIC = "metric"
+        const val IMPERIAL = "imperial"
+    }
+
+    object Gender {
+        const val FEMALE = "female"
+        const val MALE = "male"
+        const val NON_BINARY = "non_binary"
+        const val UNSPECIFIED = "unspecified"
     }
 
     private companion object {
