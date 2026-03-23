@@ -12,6 +12,8 @@ import com.fitforge.app.presentation.onboarding.fitnesslevel.FitnessLevelScreen
 import com.fitforge.app.presentation.onboarding.fitnesslevel.FitnessLevelViewModel
 import com.fitforge.app.presentation.onboarding.goals.GoalSelectionScreen
 import com.fitforge.app.presentation.onboarding.goals.GoalSelectionViewModel
+import com.fitforge.app.presentation.onboarding.permissions.PermissionsScreen
+import com.fitforge.app.presentation.onboarding.permissions.PermissionsViewModel
 import com.fitforge.app.presentation.onboarding.schedulesetup.ScheduleSetupScreen
 import com.fitforge.app.presentation.onboarding.schedulesetup.ScheduleSetupViewModel
 import com.fitforge.app.presentation.onboarding.splash.SplashScreen
@@ -102,6 +104,20 @@ fun NavGraph() {
                 uiState = uiState.value,
                 onDayToggle = viewModel::onDayToggle,
                 onDurationChanged = viewModel::onDurationChanged,
+                onContinue = viewModel::onContinueClick,
+                onNavigateNext = { route -> navController.navigate(route) },
+            )
+        }
+        composable(Screen.Permissions.route) {
+            val viewModel: PermissionsViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            PermissionsScreen(
+                uiState = uiState.value,
+                onHealthConnectAvailabilityResolved = viewModel::setHealthConnectAvailability,
+                onNotificationPermissionResult = viewModel::onNotificationPermissionResult,
+                onNotificationSkipped = viewModel::onNotificationSkipped,
+                onHealthConnectPermissionResult = viewModel::onHealthConnectPermissionResult,
+                onHealthConnectSkipped = viewModel::onHealthConnectSkipped,
                 onContinue = viewModel::onContinueClick,
                 onNavigateNext = { },
             )

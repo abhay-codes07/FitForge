@@ -31,4 +31,8 @@ class OnboardingRepositoryImpl @Inject constructor(
     override suspend fun setWorkoutDays(values: Set<String>) { userPrefs.setWorkoutDays(values) }
     override suspend fun getWorkoutDurationMinutes(): Int = userPrefs.workoutDurationMinutes.first()
     override suspend fun setWorkoutDurationMinutes(value: Int) { userPrefs.setWorkoutDurationMinutes(value) }
+    override suspend fun getNotificationPermissionState(): String = userPrefs.notificationPermissionState.first()
+    override suspend fun setNotificationPermissionState(value: String) { userPrefs.setNotificationPermissionState(value) }
+    override suspend fun getHealthConnectPermissionState(): String = userPrefs.healthConnectPermissionState.first()
+    override suspend fun setHealthConnectPermissionState(value: String) { userPrefs.setHealthConnectPermissionState(value) }
 }

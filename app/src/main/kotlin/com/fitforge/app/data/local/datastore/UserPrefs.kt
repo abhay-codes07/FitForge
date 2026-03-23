@@ -104,6 +104,18 @@ class UserPrefs @Inject constructor(
         }
         .map { prefs -> prefs[Keys.WorkoutDurationMinutes] ?: 30 }
 
+    val notificationPermissionState: Flow<String> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.NotificationPermissionState] ?: PermissionState.PENDING }
+
+    val healthConnectPermissionState: Flow<String> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.HealthConnectPermissionState] ?: PermissionState.PENDING }
+
     suspend fun setOnboardingComplete(completed: Boolean) {
         dataStore.edit { prefs -> prefs[Keys.OnboardingComplete] = completed }
     }
@@ -156,6 +168,14 @@ class UserPrefs @Inject constructor(
         dataStore.edit { prefs -> prefs[Keys.WorkoutDurationMinutes] = value }
     }
 
+    suspend fun setNotificationPermissionState(value: String) {
+        dataStore.edit { prefs -> prefs[Keys.NotificationPermissionState] = value }
+    }
+
+    suspend fun setHealthConnectPermissionState(value: String) {
+        dataStore.edit { prefs -> prefs[Keys.HealthConnectPermissionState] = value }
+    }
+
     private object Keys {
         val OnboardingComplete = booleanPreferencesKey("onboarding_complete")
         val ThemePreference = stringPreferencesKey("theme_preference")
@@ -170,6 +190,8 @@ class UserPrefs @Inject constructor(
         val AvailableEquipment = stringSetPreferencesKey("available_equipment")
         val WorkoutDays = stringSetPreferencesKey("workout_days")
         val WorkoutDurationMinutes = intPreferencesKey("workout_duration_minutes")
+        val NotificationPermissionState = stringPreferencesKey("notification_permission_state")
+        val HealthConnectPermissionState = stringPreferencesKey("health_connect_permission_state")
     }
 
     object ThemePreference {
@@ -222,6 +244,12 @@ class UserPrefs @Inject constructor(
         const val FRIDAY = "fri"
         const val SATURDAY = "sat"
         const val SUNDAY = "sun"
+    }
+
+    object PermissionState {
+        const val PENDING = "pending"
+        const val GRANTED = "granted"
+        const val SKIPPED = "skipped"
     }
 
     private companion object {

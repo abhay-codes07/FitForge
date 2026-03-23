@@ -24,4 +24,8 @@ interface OnboardingRepository {
     suspend fun setWorkoutDays(values: Set<String>)
     suspend fun getWorkoutDurationMinutes(): Int
     suspend fun setWorkoutDurationMinutes(value: Int)
+    suspend fun getNotificationPermissionState(): String
+    suspend fun setNotificationPermissionState(value: String)
+    suspend fun getHealthConnectPermissionState(): String
+    suspend fun setHealthConnectPermissionState(value: String)
 }

@@ -93,9 +93,7 @@ class GoalSelectionViewModelTest {
 
         override suspend fun isOnboardingComplete(): Boolean = false
         override suspend fun getSelectedGoals(): Set<String> = savedGoals
-        override suspend fun setSelectedGoals(values: Set<String>) {
-            savedGoals = values
-        }
+        override suspend fun setSelectedGoals(values: Set<String>) { savedGoals = values }
         override suspend fun getPreferredUnitSystem(): String = "metric"
         override suspend fun setPreferredUnitSystem(value: String) = Unit
         override suspend fun getHeightValue(): Float? = null
@@ -116,7 +114,9 @@ class GoalSelectionViewModelTest {
         override suspend fun setWorkoutDays(values: Set<String>) = Unit
         override suspend fun getWorkoutDurationMinutes(): Int = 30
         override suspend fun setWorkoutDurationMinutes(value: Int) = Unit
+        override suspend fun getNotificationPermissionState(): String = "pending"
+        override suspend fun setNotificationPermissionState(value: String) = Unit
+        override suspend fun getHealthConnectPermissionState(): String = "pending"
+        override suspend fun setHealthConnectPermissionState(value: String) = Unit
     }
 }
-
-

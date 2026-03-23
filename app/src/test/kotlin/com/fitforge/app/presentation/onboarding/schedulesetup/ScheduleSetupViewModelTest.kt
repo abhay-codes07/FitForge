@@ -118,5 +118,9 @@ class ScheduleSetupViewModelTest {
         override suspend fun setWorkoutDays(values: Set<String>) { workoutDays = values }
         override suspend fun getWorkoutDurationMinutes(): Int = workoutDurationMinutes
         override suspend fun setWorkoutDurationMinutes(value: Int) { workoutDurationMinutes = value }
+        override suspend fun getNotificationPermissionState(): String = "pending"
+        override suspend fun setNotificationPermissionState(value: String) = Unit
+        override suspend fun getHealthConnectPermissionState(): String = "pending"
+        override suspend fun setHealthConnectPermissionState(value: String) = Unit
     }
 }
