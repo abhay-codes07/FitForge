@@ -14,4 +14,6 @@ interface OnboardingRepository {
     suspend fun setAgeValue(value: Float)
     suspend fun getGenderValue(): String
     suspend fun setGenderValue(value: String)
+    suspend fun getFitnessLevel(): String
+    suspend fun setFitnessLevel(value: String)
 }

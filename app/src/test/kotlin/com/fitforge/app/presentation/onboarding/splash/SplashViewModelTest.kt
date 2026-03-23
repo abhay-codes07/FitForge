@@ -3,8 +3,8 @@ package com.fitforge.app.presentation.onboarding.splash
 import com.fitforge.app.domain.repository.OnboardingRepository
 import com.fitforge.app.domain.usecase.onboarding.ResolveSplashDestinationUseCase
 import com.fitforge.app.navigation.Screen
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -90,5 +90,7 @@ class SplashViewModelTest {
         override suspend fun setAgeValue(value: Float) = Unit
         override suspend fun getGenderValue(): String = "unspecified"
         override suspend fun setGenderValue(value: String) = Unit
+        override suspend fun getFitnessLevel(): String = "unspecified"
+        override suspend fun setFitnessLevel(value: String) = Unit
     }
 }

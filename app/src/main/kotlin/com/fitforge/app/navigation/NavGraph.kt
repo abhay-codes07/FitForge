@@ -6,12 +6,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.fitforge.app.presentation.onboarding.splash.SplashScreen
-import com.fitforge.app.presentation.onboarding.splash.SplashViewModel
 import com.fitforge.app.presentation.onboarding.bodymetrics.BodyMetricsScreen
 import com.fitforge.app.presentation.onboarding.bodymetrics.BodyMetricsViewModel
+import com.fitforge.app.presentation.onboarding.fitnesslevel.FitnessLevelScreen
+import com.fitforge.app.presentation.onboarding.fitnesslevel.FitnessLevelViewModel
 import com.fitforge.app.presentation.onboarding.goals.GoalSelectionScreen
 import com.fitforge.app.presentation.onboarding.goals.GoalSelectionViewModel
+import com.fitforge.app.presentation.onboarding.splash.SplashScreen
+import com.fitforge.app.presentation.onboarding.splash.SplashViewModel
 import com.fitforge.app.presentation.onboarding.welcome.WelcomeScreen
 import com.fitforge.app.presentation.onboarding.welcome.WelcomeViewModel
 
@@ -68,6 +70,18 @@ fun NavGraph() {
                 onWeightChanged = viewModel::onWeightChanged,
                 onAgeChanged = viewModel::onAgeChanged,
                 onGenderSelected = viewModel::onGenderSelected,
+                onContinue = viewModel::onContinueClick,
+                onNavigateNext = { route ->
+                    navController.navigate(route)
+                },
+            )
+        }
+        composable(Screen.FitnessLevel.route) {
+            val viewModel: FitnessLevelViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            FitnessLevelScreen(
+                uiState = uiState.value,
+                onFitnessLevelSelected = viewModel::onFitnessLevelSelected,
                 onContinue = viewModel::onContinueClick,
                 onNavigateNext = { },
             )

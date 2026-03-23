@@ -6,8 +6,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
@@ -73,6 +73,12 @@ class UserPrefs @Inject constructor(
         }
         .map { prefs -> prefs[Keys.GenderValue] ?: Gender.UNSPECIFIED }
 
+    val fitnessLevel: Flow<String> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.FitnessLevel] ?: FitnessLevel.UNSPECIFIED }
+
     suspend fun setOnboardingComplete(completed: Boolean) {
         dataStore.edit { prefs -> prefs[Keys.OnboardingComplete] = completed }
     }
@@ -105,6 +111,10 @@ class UserPrefs @Inject constructor(
         dataStore.edit { prefs -> prefs[Keys.GenderValue] = value }
     }
 
+    suspend fun setFitnessLevel(value: String) {
+        dataStore.edit { prefs -> prefs[Keys.FitnessLevel] = value }
+    }
+
     private object Keys {
         val OnboardingComplete = booleanPreferencesKey("onboarding_complete")
         val ThemePreference = stringPreferencesKey("theme_preference")
@@ -114,6 +124,7 @@ class UserPrefs @Inject constructor(
         val WeightValue = floatPreferencesKey("weight_value")
         val AgeValue = floatPreferencesKey("age_value")
         val GenderValue = stringPreferencesKey("gender_value")
+        val FitnessLevel = stringPreferencesKey("fitness_level")
     }
 
     object ThemePreference {
@@ -131,6 +142,13 @@ class UserPrefs @Inject constructor(
         const val FEMALE = "female"
         const val MALE = "male"
         const val NON_BINARY = "non_binary"
+        const val UNSPECIFIED = "unspecified"
+    }
+
+    object FitnessLevel {
+        const val BEGINNER = "beginner"
+        const val INTERMEDIATE = "intermediate"
+        const val ADVANCED = "advanced"
         const val UNSPECIFIED = "unspecified"
     }
 

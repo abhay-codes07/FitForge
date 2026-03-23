@@ -109,5 +109,7 @@ class GoalSelectionViewModelTest {
         override suspend fun setAgeValue(value: Float) = Unit
         override suspend fun getGenderValue(): String = "unspecified"
         override suspend fun setGenderValue(value: String) = Unit
+        override suspend fun getFitnessLevel(): String = "unspecified"
+        override suspend fun setFitnessLevel(value: String) = Unit
     }
 }

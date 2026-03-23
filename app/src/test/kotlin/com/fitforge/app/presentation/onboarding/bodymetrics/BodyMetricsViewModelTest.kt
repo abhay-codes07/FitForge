@@ -1,7 +1,6 @@
 package com.fitforge.app.presentation.onboarding.bodymetrics
 
 import com.fitforge.app.domain.repository.OnboardingRepository
-import com.fitforge.app.domain.usecase.onboarding.BodyMetricsDraft
 import com.fitforge.app.domain.usecase.onboarding.GetBodyMetricsDraftUseCase
 import com.fitforge.app.domain.usecase.onboarding.SaveBodyMetricsUseCase
 import com.fitforge.app.domain.usecase.onboarding.ValidateBodyMetricsUseCase
@@ -122,6 +121,7 @@ class BodyMetricsViewModelTest {
         override suspend fun setAgeValue(value: Float) { age = value }
         override suspend fun getGenderValue(): String = gender
         override suspend fun setGenderValue(value: String) { gender = value }
+        override suspend fun getFitnessLevel(): String = "unspecified"
+        override suspend fun setFitnessLevel(value: String) = Unit
     }
 }
-

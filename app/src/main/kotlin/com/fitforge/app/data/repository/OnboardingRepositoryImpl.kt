@@ -45,4 +45,10 @@ class OnboardingRepositoryImpl @Inject constructor(
     override suspend fun setGenderValue(value: String) {
         userPrefs.setGenderValue(value)
     }
+
+    override suspend fun getFitnessLevel(): String = userPrefs.fitnessLevel.first()
+
+    override suspend fun setFitnessLevel(value: String) {
+        userPrefs.setFitnessLevel(value)
+    }
 }
