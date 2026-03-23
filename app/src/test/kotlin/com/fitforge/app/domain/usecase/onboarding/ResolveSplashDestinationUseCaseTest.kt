@@ -30,6 +30,7 @@ class ResolveSplashDestinationUseCaseTest {
         private val isComplete: Boolean,
     ) : OnboardingRepository {
         override suspend fun isOnboardingComplete(): Boolean = isComplete
+        override suspend fun getSelectedGoals(): Set<String> = emptySet()
+        override suspend fun setSelectedGoals(values: Set<String>) = Unit
     }
 }
-

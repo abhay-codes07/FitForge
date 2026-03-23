@@ -9,5 +9,10 @@ class OnboardingRepositoryImpl @Inject constructor(
     private val userPrefs: UserPrefs,
 ) : OnboardingRepository {
     override suspend fun isOnboardingComplete(): Boolean = userPrefs.isOnboardingComplete.first()
-}
 
+    override suspend fun getSelectedGoals(): Set<String> = userPrefs.selectedGoals.first()
+
+    override suspend fun setSelectedGoals(values: Set<String>) {
+        userPrefs.setSelectedGoals(values)
+    }
+}
