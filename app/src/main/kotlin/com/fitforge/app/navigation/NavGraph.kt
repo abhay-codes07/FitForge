@@ -12,6 +12,8 @@ import com.fitforge.app.presentation.onboarding.fitnesslevel.FitnessLevelScreen
 import com.fitforge.app.presentation.onboarding.fitnesslevel.FitnessLevelViewModel
 import com.fitforge.app.presentation.onboarding.goals.GoalSelectionScreen
 import com.fitforge.app.presentation.onboarding.goals.GoalSelectionViewModel
+import com.fitforge.app.presentation.onboarding.schedulesetup.ScheduleSetupScreen
+import com.fitforge.app.presentation.onboarding.schedulesetup.ScheduleSetupViewModel
 import com.fitforge.app.presentation.onboarding.splash.SplashScreen
 import com.fitforge.app.presentation.onboarding.splash.SplashViewModel
 import com.fitforge.app.presentation.onboarding.welcome.WelcomeScreen
@@ -45,9 +47,7 @@ fun NavGraph() {
             WelcomeScreen(
                 uiState = uiState.value,
                 onGetStarted = viewModel::onGetStartedClick,
-                onNavigateNext = { route ->
-                    navController.navigate(route)
-                },
+                onNavigateNext = { route -> navController.navigate(route) },
             )
         }
         composable(Screen.GoalSelection.route) {
@@ -57,9 +57,7 @@ fun NavGraph() {
                 uiState = uiState.value,
                 onGoalToggle = viewModel::onGoalToggle,
                 onContinue = viewModel::onContinueClick,
-                onNavigateNext = { route ->
-                    navController.navigate(route)
-                },
+                onNavigateNext = { route -> navController.navigate(route) },
             )
         }
         composable(Screen.BodyMetrics.route) {
@@ -73,9 +71,7 @@ fun NavGraph() {
                 onAgeChanged = viewModel::onAgeChanged,
                 onGenderSelected = viewModel::onGenderSelected,
                 onContinue = viewModel::onContinueClick,
-                onNavigateNext = { route ->
-                    navController.navigate(route)
-                },
+                onNavigateNext = { route -> navController.navigate(route) },
             )
         }
         composable(Screen.FitnessLevel.route) {
@@ -85,9 +81,7 @@ fun NavGraph() {
                 uiState = uiState.value,
                 onFitnessLevelSelected = viewModel::onFitnessLevelSelected,
                 onContinue = viewModel::onContinueClick,
-                onNavigateNext = { route ->
-                    navController.navigate(route)
-                },
+                onNavigateNext = { route -> navController.navigate(route) },
             )
         }
         composable(Screen.WorkoutPreferences.route) {
@@ -97,6 +91,17 @@ fun NavGraph() {
                 uiState = uiState.value,
                 onLocationToggle = viewModel::onLocationToggle,
                 onEquipmentToggle = viewModel::onEquipmentToggle,
+                onContinue = viewModel::onContinueClick,
+                onNavigateNext = { route -> navController.navigate(route) },
+            )
+        }
+        composable(Screen.ScheduleSetup.route) {
+            val viewModel: ScheduleSetupViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            ScheduleSetupScreen(
+                uiState = uiState.value,
+                onDayToggle = viewModel::onDayToggle,
+                onDurationChanged = viewModel::onDurationChanged,
                 onContinue = viewModel::onContinueClick,
                 onNavigateNext = { },
             )

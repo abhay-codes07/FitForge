@@ -127,5 +127,11 @@ class BodyMetricsViewModelTest {
         override suspend fun setWorkoutLocations(values: Set<String>) = Unit
         override suspend fun getAvailableEquipment(): Set<String> = emptySet()
         override suspend fun setAvailableEquipment(values: Set<String>) = Unit
+        override suspend fun getWorkoutDays(): Set<String> = emptySet()
+        override suspend fun setWorkoutDays(values: Set<String>) = Unit
+        override suspend fun getWorkoutDurationMinutes(): Int = 30
+        override suspend fun setWorkoutDurationMinutes(value: Int) = Unit
     }
 }
+
+

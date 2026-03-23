@@ -3,9 +3,10 @@ package com.fitforge.app.data.local.datastore
 import android.content.Context
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
@@ -91,6 +92,18 @@ class UserPrefs @Inject constructor(
         }
         .map { prefs -> prefs[Keys.AvailableEquipment] ?: emptySet() }
 
+    val workoutDays: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.WorkoutDays] ?: emptySet() }
+
+    val workoutDurationMinutes: Flow<Int> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.WorkoutDurationMinutes] ?: 30 }
+
     suspend fun setOnboardingComplete(completed: Boolean) {
         dataStore.edit { prefs -> prefs[Keys.OnboardingComplete] = completed }
     }
@@ -135,6 +148,14 @@ class UserPrefs @Inject constructor(
         dataStore.edit { prefs -> prefs[Keys.AvailableEquipment] = values }
     }
 
+    suspend fun setWorkoutDays(values: Set<String>) {
+        dataStore.edit { prefs -> prefs[Keys.WorkoutDays] = values }
+    }
+
+    suspend fun setWorkoutDurationMinutes(value: Int) {
+        dataStore.edit { prefs -> prefs[Keys.WorkoutDurationMinutes] = value }
+    }
+
     private object Keys {
         val OnboardingComplete = booleanPreferencesKey("onboarding_complete")
         val ThemePreference = stringPreferencesKey("theme_preference")
@@ -147,6 +168,8 @@ class UserPrefs @Inject constructor(
         val FitnessLevel = stringPreferencesKey("fitness_level")
         val WorkoutLocations = stringSetPreferencesKey("workout_locations")
         val AvailableEquipment = stringSetPreferencesKey("available_equipment")
+        val WorkoutDays = stringSetPreferencesKey("workout_days")
+        val WorkoutDurationMinutes = intPreferencesKey("workout_duration_minutes")
     }
 
     object ThemePreference {
@@ -189,6 +212,16 @@ class UserPrefs @Inject constructor(
         const val BENCH = "bench"
         const val TREADMILL = "treadmill"
         const val YOGA_MAT = "yoga_mat"
+    }
+
+    object WorkoutDay {
+        const val MONDAY = "mon"
+        const val TUESDAY = "tue"
+        const val WEDNESDAY = "wed"
+        const val THURSDAY = "thu"
+        const val FRIDAY = "fri"
+        const val SATURDAY = "sat"
+        const val SUNDAY = "sun"
     }
 
     private companion object {

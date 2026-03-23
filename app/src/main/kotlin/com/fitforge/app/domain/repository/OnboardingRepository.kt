@@ -20,4 +20,8 @@ interface OnboardingRepository {
     suspend fun setWorkoutLocations(values: Set<String>)
     suspend fun getAvailableEquipment(): Set<String>
     suspend fun setAvailableEquipment(values: Set<String>)
+    suspend fun getWorkoutDays(): Set<String>
+    suspend fun setWorkoutDays(values: Set<String>)
+    suspend fun getWorkoutDurationMinutes(): Int
+    suspend fun setWorkoutDurationMinutes(value: Int)
 }

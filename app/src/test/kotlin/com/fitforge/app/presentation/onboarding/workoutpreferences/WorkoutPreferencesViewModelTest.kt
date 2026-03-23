@@ -114,5 +114,11 @@ class WorkoutPreferencesViewModelTest {
         override suspend fun setWorkoutLocations(values: Set<String>) { workoutLocations = values }
         override suspend fun getAvailableEquipment(): Set<String> = availableEquipment
         override suspend fun setAvailableEquipment(values: Set<String>) { availableEquipment = values }
+        override suspend fun getWorkoutDays(): Set<String> = emptySet()
+        override suspend fun setWorkoutDays(values: Set<String>) = Unit
+        override suspend fun getWorkoutDurationMinutes(): Int = 30
+        override suspend fun setWorkoutDurationMinutes(value: Int) = Unit
     }
 }
+
+
