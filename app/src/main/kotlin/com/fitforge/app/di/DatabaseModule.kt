@@ -22,7 +22,9 @@ object DatabaseModule {
             context,
             FitForgeDatabase::class.java,
             "fitforge.db",
-        ).fallbackToDestructiveMigration().build()
+        )
+            .createFromAsset("databases/exercises.db")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }
-
