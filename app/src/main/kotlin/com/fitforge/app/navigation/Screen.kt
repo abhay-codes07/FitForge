@@ -12,6 +12,7 @@ sealed class Screen(val route: String) {
     data object Auth : Screen("auth")
     data object Home : Screen("home")
     data object Workouts : Screen("workouts")
+    data object CustomWorkout : Screen("custom_workout")
     data object ExerciseDetail : Screen("exercise_detail/{exerciseId}") {
         fun createRoute(exerciseId: String): String = "exercise_detail/$exerciseId"
     }

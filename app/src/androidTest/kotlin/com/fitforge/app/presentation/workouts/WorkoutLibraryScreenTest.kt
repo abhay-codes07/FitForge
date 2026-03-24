@@ -15,8 +15,9 @@ class WorkoutLibraryScreenTest {
     val composeRule = createComposeRule()
 
     @Test
-    fun workoutLibrary_rendersListSearchAndClick() {
+    fun workoutLibrary_rendersListSearchClickAndCreate() {
         var clickedId: String? = null
+        var createClicked = false
 
         composeRule.setContent {
             FitForgeTheme {
@@ -41,14 +42,18 @@ class WorkoutLibraryScreenTest {
                     onCategorySelected = {},
                     onDifficultySelected = {},
                     onExerciseClick = { clickedId = it },
+                    onCreateCustomWorkoutClick = { createClicked = true },
                 )
             }
         }
 
         composeRule.onNodeWithTag("workout_library_screen").assertIsDisplayed()
+        composeRule.onNodeWithTag("workout_create_custom").performClick()
         composeRule.onNodeWithTag("workout_search").performTextInput("bench")
         composeRule.onNodeWithTag("workout_item_e1").assertIsDisplayed()
         composeRule.onNodeWithTag("workout_item_e1").performClick()
+
+        assertEquals(true, createClicked)
         assertEquals("e1", clickedId)
     }
 
@@ -62,6 +67,7 @@ class WorkoutLibraryScreenTest {
                     onCategorySelected = {},
                     onDifficultySelected = {},
                     onExerciseClick = {},
+                    onCreateCustomWorkoutClick = {},
                 )
             }
         }

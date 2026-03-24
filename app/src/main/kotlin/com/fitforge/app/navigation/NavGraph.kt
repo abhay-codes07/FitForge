@@ -28,6 +28,8 @@ import com.fitforge.app.presentation.onboarding.welcome.WelcomeScreen
 import com.fitforge.app.presentation.onboarding.welcome.WelcomeViewModel
 import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesScreen
 import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesViewModel
+import com.fitforge.app.presentation.workouts.CreateCustomWorkoutScreen
+import com.fitforge.app.presentation.workouts.CreateCustomWorkoutViewModel
 import com.fitforge.app.presentation.workouts.ExerciseDetailScreen
 import com.fitforge.app.presentation.workouts.ExerciseDetailViewModel
 import com.fitforge.app.presentation.workouts.WorkoutLibraryScreen
@@ -168,6 +170,24 @@ fun NavGraph() {
                 onExerciseClick = { exerciseId ->
                     navController.navigate(Screen.ExerciseDetail.createRoute(exerciseId))
                 },
+                onCreateCustomWorkoutClick = {
+                    navController.navigate(Screen.CustomWorkout.route)
+                },
+            )
+        }
+        composable(Screen.CustomWorkout.route) {
+            val viewModel: CreateCustomWorkoutViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            CreateCustomWorkoutScreen(
+                uiState = uiState.value,
+                onNameChanged = viewModel::onNameChanged,
+                onDescriptionChanged = viewModel::onDescriptionChanged,
+                onSearchQueryChanged = viewModel::onSearchQueryChanged,
+                onWorkoutTypeSelected = viewModel::onWorkoutTypeSelected,
+                onDifficultySelected = viewModel::onDifficultySelected,
+                onDurationChanged = viewModel::onDurationChanged,
+                onExerciseToggled = viewModel::onExerciseToggled,
+                onSaveClick = viewModel::onSaveClick,
             )
         }
         composable(

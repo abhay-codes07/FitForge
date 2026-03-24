@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.fitforge.app.domain.usecase.workouts.GetWorkoutLibraryExercisesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class WorkoutLibraryViewModel @Inject constructor(
     private val getWorkoutLibraryExercisesUseCase: GetWorkoutLibraryExercisesUseCase,
