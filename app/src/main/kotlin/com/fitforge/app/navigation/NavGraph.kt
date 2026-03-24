@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.fitforge.app.presentation.active_workout.ActiveWorkoutScreen
+import com.fitforge.app.presentation.active_workout.ActiveWorkoutViewModel
 import com.fitforge.app.presentation.active_workout.StartWorkoutScreen
 import com.fitforge.app.presentation.active_workout.StartWorkoutViewModel
 import com.fitforge.app.presentation.analytics.AnalyticsOverviewScreen
@@ -172,7 +174,26 @@ fun NavGraph() {
             val uiState = viewModel.uiState.collectAsStateWithLifecycle()
             StartWorkoutScreen(
                 uiState = uiState.value,
-                onOptionSelected = viewModel::onOptionSelected,
+                onOptionSelected = { option ->
+                    viewModel.onOptionSelected(option)
+                    navController.navigate(Screen.ActiveWorkout.route)
+                },
+            )
+        }
+        composable(Screen.ActiveWorkout.route) {
+            val viewModel: ActiveWorkoutViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            ActiveWorkoutScreen(
+                uiState = uiState.value,
+                onClose = { navController.popBackStack() },
+                onShuffle = viewModel::onShuffleExercise,
+                onSkip = viewModel::onSkipExercise,
+                onRepIncrement = viewModel::onRepIncrement,
+                onRepDecrement = viewModel::onRepDecrement,
+                onCompleteSet = { viewModel.onCompleteSet() },
+                onDismissRestTimer = viewModel::onDismissRestTimer,
+                onRetry = viewModel::retry,
+                onDismissError = viewModel::onDismissError,
             )
         }
         composable(Screen.Analytics.route) {
