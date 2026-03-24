@@ -90,6 +90,7 @@ class PermissionsViewModelTest {
         var healthConnectState: String = UserPrefs.PermissionState.PENDING,
     ) : OnboardingRepository {
         override suspend fun isOnboardingComplete(): Boolean = false
+        override suspend fun setOnboardingComplete(completed: Boolean) = Unit
         override suspend fun getSelectedGoals(): Set<String> = emptySet()
         override suspend fun setSelectedGoals(values: Set<String>) = Unit
         override suspend fun getPreferredUnitSystem(): String = "metric"
@@ -116,5 +117,11 @@ class PermissionsViewModelTest {
         override suspend fun setNotificationPermissionState(value: String) { notificationState = value }
         override suspend fun getHealthConnectPermissionState(): String = healthConnectState
         override suspend fun setHealthConnectPermissionState(value: String) { healthConnectState = value }
+        override suspend fun getAuthMethod(): String = "none"
+        override suspend fun setAuthMethod(value: String) = Unit
+        override suspend fun getAuthEmail(): String? = null
+        override suspend fun setAuthEmail(value: String?) = Unit
     }
 }
+
+

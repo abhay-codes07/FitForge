@@ -6,6 +6,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.fitforge.app.presentation.onboarding.auth.AuthScreen
+import com.fitforge.app.presentation.onboarding.auth.AuthViewModel
 import com.fitforge.app.presentation.onboarding.bodymetrics.BodyMetricsScreen
 import com.fitforge.app.presentation.onboarding.bodymetrics.BodyMetricsViewModel
 import com.fitforge.app.presentation.onboarding.fitnesslevel.FitnessLevelScreen
@@ -119,7 +121,24 @@ fun NavGraph() {
                 onHealthConnectPermissionResult = viewModel::onHealthConnectPermissionResult,
                 onHealthConnectSkipped = viewModel::onHealthConnectSkipped,
                 onContinue = viewModel::onContinueClick,
-                onNavigateNext = { },
+                onNavigateNext = { route -> navController.navigate(route) },
+            )
+        }
+        composable(Screen.Auth.route) {
+            val viewModel: AuthViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            AuthScreen(
+                uiState = uiState.value,
+                onEmailChanged = viewModel::onEmailChanged,
+                onPasswordChanged = viewModel::onPasswordChanged,
+                onEmailContinue = viewModel::onEmailContinueClick,
+                onGoogleContinue = viewModel::onGoogleContinueClick,
+                onGuestContinue = viewModel::onGuestContinueClick,
+                onNavigateNext = { route ->
+                    navController.navigate(route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                },
             )
         }
     }

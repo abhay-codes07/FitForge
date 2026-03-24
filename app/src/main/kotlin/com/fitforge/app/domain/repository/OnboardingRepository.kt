@@ -2,6 +2,7 @@ package com.fitforge.app.domain.repository
 
 interface OnboardingRepository {
     suspend fun isOnboardingComplete(): Boolean
+    suspend fun setOnboardingComplete(completed: Boolean)
     suspend fun getSelectedGoals(): Set<String>
     suspend fun setSelectedGoals(values: Set<String>)
     suspend fun getPreferredUnitSystem(): String
@@ -28,4 +29,8 @@ interface OnboardingRepository {
     suspend fun setNotificationPermissionState(value: String)
     suspend fun getHealthConnectPermissionState(): String
     suspend fun setHealthConnectPermissionState(value: String)
+    suspend fun getAuthMethod(): String
+    suspend fun setAuthMethod(value: String)
+    suspend fun getAuthEmail(): String?
+    suspend fun setAuthEmail(value: String?)
 }

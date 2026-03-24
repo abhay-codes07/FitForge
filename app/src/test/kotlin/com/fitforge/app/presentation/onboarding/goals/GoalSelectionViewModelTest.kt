@@ -92,6 +92,7 @@ class GoalSelectionViewModelTest {
         var savedGoals: Set<String> = initialGoals
 
         override suspend fun isOnboardingComplete(): Boolean = false
+        override suspend fun setOnboardingComplete(completed: Boolean) = Unit
         override suspend fun getSelectedGoals(): Set<String> = savedGoals
         override suspend fun setSelectedGoals(values: Set<String>) { savedGoals = values }
         override suspend fun getPreferredUnitSystem(): String = "metric"
@@ -118,5 +119,13 @@ class GoalSelectionViewModelTest {
         override suspend fun setNotificationPermissionState(value: String) = Unit
         override suspend fun getHealthConnectPermissionState(): String = "pending"
         override suspend fun setHealthConnectPermissionState(value: String) = Unit
+        override suspend fun getAuthMethod(): String = "none"
+        override suspend fun setAuthMethod(value: String) = Unit
+        override suspend fun getAuthEmail(): String? = null
+        override suspend fun setAuthEmail(value: String?) = Unit
     }
 }
+
+
+
+

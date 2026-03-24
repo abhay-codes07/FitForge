@@ -9,6 +9,7 @@ class OnboardingRepositoryImpl @Inject constructor(
     private val userPrefs: UserPrefs,
 ) : OnboardingRepository {
     override suspend fun isOnboardingComplete(): Boolean = userPrefs.isOnboardingComplete.first()
+    override suspend fun setOnboardingComplete(completed: Boolean) { userPrefs.setOnboardingComplete(completed) }
     override suspend fun getSelectedGoals(): Set<String> = userPrefs.selectedGoals.first()
     override suspend fun setSelectedGoals(values: Set<String>) { userPrefs.setSelectedGoals(values) }
     override suspend fun getPreferredUnitSystem(): String = userPrefs.preferredUnitSystem.first()
@@ -35,4 +36,8 @@ class OnboardingRepositoryImpl @Inject constructor(
     override suspend fun setNotificationPermissionState(value: String) { userPrefs.setNotificationPermissionState(value) }
     override suspend fun getHealthConnectPermissionState(): String = userPrefs.healthConnectPermissionState.first()
     override suspend fun setHealthConnectPermissionState(value: String) { userPrefs.setHealthConnectPermissionState(value) }
+    override suspend fun getAuthMethod(): String = userPrefs.authMethod.first()
+    override suspend fun setAuthMethod(value: String) { userPrefs.setAuthMethod(value) }
+    override suspend fun getAuthEmail(): String? = userPrefs.authEmail.first()
+    override suspend fun setAuthEmail(value: String?) { userPrefs.setAuthEmail(value) }
 }

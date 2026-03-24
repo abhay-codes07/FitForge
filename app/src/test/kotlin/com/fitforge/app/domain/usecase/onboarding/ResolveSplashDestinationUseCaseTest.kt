@@ -30,6 +30,7 @@ class ResolveSplashDestinationUseCaseTest {
         private val isComplete: Boolean,
     ) : OnboardingRepository {
         override suspend fun isOnboardingComplete(): Boolean = isComplete
+        override suspend fun setOnboardingComplete(completed: Boolean) = Unit
         override suspend fun getSelectedGoals(): Set<String> = emptySet()
         override suspend fun setSelectedGoals(values: Set<String>) = Unit
         override suspend fun getPreferredUnitSystem(): String = "metric"
@@ -56,5 +57,12 @@ class ResolveSplashDestinationUseCaseTest {
         override suspend fun setNotificationPermissionState(value: String) = Unit
         override suspend fun getHealthConnectPermissionState(): String = "pending"
         override suspend fun setHealthConnectPermissionState(value: String) = Unit
+        override suspend fun getAuthMethod(): String = "none"
+        override suspend fun setAuthMethod(value: String) = Unit
+        override suspend fun getAuthEmail(): String? = null
+        override suspend fun setAuthEmail(value: String?) = Unit
     }
 }
+
+
+

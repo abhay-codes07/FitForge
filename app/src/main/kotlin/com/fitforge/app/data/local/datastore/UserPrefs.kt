@@ -116,6 +116,18 @@ class UserPrefs @Inject constructor(
         }
         .map { prefs -> prefs[Keys.HealthConnectPermissionState] ?: PermissionState.PENDING }
 
+    val authMethod: Flow<String> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.AuthMethod] ?: AuthMethod.NONE }
+
+    val authEmail: Flow<String?> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { prefs -> prefs[Keys.AuthEmail] }
+
     suspend fun setOnboardingComplete(completed: Boolean) {
         dataStore.edit { prefs -> prefs[Keys.OnboardingComplete] = completed }
     }
@@ -176,6 +188,20 @@ class UserPrefs @Inject constructor(
         dataStore.edit { prefs -> prefs[Keys.HealthConnectPermissionState] = value }
     }
 
+    suspend fun setAuthMethod(value: String) {
+        dataStore.edit { prefs -> prefs[Keys.AuthMethod] = value }
+    }
+
+    suspend fun setAuthEmail(value: String?) {
+        dataStore.edit { prefs ->
+            if (value == null) {
+                prefs.remove(Keys.AuthEmail)
+            } else {
+                prefs[Keys.AuthEmail] = value
+            }
+        }
+    }
+
     private object Keys {
         val OnboardingComplete = booleanPreferencesKey("onboarding_complete")
         val ThemePreference = stringPreferencesKey("theme_preference")
@@ -192,6 +218,8 @@ class UserPrefs @Inject constructor(
         val WorkoutDurationMinutes = intPreferencesKey("workout_duration_minutes")
         val NotificationPermissionState = stringPreferencesKey("notification_permission_state")
         val HealthConnectPermissionState = stringPreferencesKey("health_connect_permission_state")
+        val AuthMethod = stringPreferencesKey("auth_method")
+        val AuthEmail = stringPreferencesKey("auth_email")
     }
 
     object ThemePreference {
@@ -250,6 +278,13 @@ class UserPrefs @Inject constructor(
         const val PENDING = "pending"
         const val GRANTED = "granted"
         const val SKIPPED = "skipped"
+    }
+
+    object AuthMethod {
+        const val NONE = "none"
+        const val EMAIL = "email"
+        const val GOOGLE = "google"
+        const val ANONYMOUS = "anonymous"
     }
 
     private companion object {
