@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.fitforge.app.presentation.analytics.AnalyticsOverviewScreen
+import com.fitforge.app.presentation.analytics.AnalyticsOverviewViewModel
 import com.fitforge.app.presentation.home.HomeDashboardScreen
 import com.fitforge.app.presentation.home.HomeDashboardViewModel
 import com.fitforge.app.presentation.onboarding.auth.AuthScreen
@@ -157,6 +159,14 @@ fun NavGraph() {
             HomeDashboardScreen(
                 uiState = uiState.value,
                 onRefresh = viewModel::refresh,
+            )
+        }
+        composable(Screen.Analytics.route) {
+            val viewModel: AnalyticsOverviewViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            AnalyticsOverviewScreen(
+                uiState = uiState.value,
+                onRangeSelected = viewModel::onRangeSelected,
             )
         }
         composable(Screen.Workouts.route) {
