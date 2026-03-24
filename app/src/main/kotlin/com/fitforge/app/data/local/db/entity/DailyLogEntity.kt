@@ -17,7 +17,7 @@ import androidx.room.PrimaryKey
     ],
     indices = [
         Index(value = ["userId"]),
-        Index(value = ["logDateEpochDay"], unique = true),
+        Index(value = ["userId", "logDateEpochDay"], unique = true),
     ],
 )
 data class DailyLogEntity(
@@ -35,4 +35,3 @@ data class DailyLogEntity(
     val readinessScore: Int?,
     val notes: String?,
 )
-

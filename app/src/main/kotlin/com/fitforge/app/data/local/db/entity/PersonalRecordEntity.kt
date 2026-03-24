@@ -30,6 +30,7 @@ import androidx.room.PrimaryKey
     indices = [
         Index(value = ["userId"]),
         Index(value = ["exerciseId"]),
+        Index(value = ["workoutId"]),
         Index(value = ["metricType"]),
         Index(value = ["achievedAtEpochMillis"]),
     ],
@@ -45,4 +46,3 @@ data class PersonalRecordEntity(
     val achievedAtEpochMillis: Long,
     val notes: String?,
 )
-
