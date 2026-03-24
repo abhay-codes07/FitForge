@@ -28,11 +28,13 @@ class AnalyticsOverviewScreenTest {
                         stepTrend = listOf(1000, 2000, 3000),
                     ),
                     onRangeSelected = {},
+                    onOpenBodyProgress = {},
                 )
             }
         }
 
         composeRule.onNodeWithTag("analytics_screen").assertIsDisplayed()
+        composeRule.onNodeWithTag("analytics_open_body_progress").performClick()
         composeRule.onNodeWithTag("analytics_steps").assertIsDisplayed()
         composeRule.onNodeWithTag("analytics_range_7").performClick()
     }
@@ -44,6 +46,7 @@ class AnalyticsOverviewScreenTest {
                 AnalyticsOverviewScreen(
                     uiState = AnalyticsOverviewUiState(isLoading = true),
                     onRangeSelected = {},
+                    onOpenBodyProgress = {},
                 )
             }
         }
