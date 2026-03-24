@@ -26,11 +26,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -43,6 +45,7 @@ import com.fitforge.app.presentation.theme.Mint500
 import com.fitforge.app.presentation.theme.Purple600
 import com.fitforge.app.presentation.theme.Radius
 import com.fitforge.app.presentation.theme.Spacing
+import com.fitforge.app.service.WorkoutTimerService
 
 @Composable
 fun ActiveWorkoutScreen(
@@ -56,7 +59,20 @@ fun ActiveWorkoutScreen(
     onDismissRestTimer: () -> Unit,
     onRetry: () -> Unit,
     onDismissError: () -> Unit,
+    timerServiceEnabled: Boolean = true,
 ) {
+    val context = LocalContext.current
+
+    if (timerServiceEnabled) {
+        LaunchedEffect(uiState.restSecondsRemaining > 0) {
+            if (uiState.restSecondsRemaining > 0) {
+                WorkoutTimerService.start(context, uiState.restSecondsRemaining)
+            } else {
+                WorkoutTimerService.stop(context)
+            }
+        }
+    }
+
     if (uiState.isLoading) {
         Box(
             modifier = Modifier
@@ -239,4 +255,3 @@ private fun WorkoutProgressBar(
         }
     }
 }
-

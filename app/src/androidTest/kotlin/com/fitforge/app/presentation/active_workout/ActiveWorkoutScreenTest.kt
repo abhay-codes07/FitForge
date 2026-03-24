@@ -36,6 +36,7 @@ class ActiveWorkoutScreenTest {
                     onDismissRestTimer = {},
                     onRetry = {},
                     onDismissError = {},
+                    timerServiceEnabled = false,
                 )
             }
         }
@@ -61,6 +62,7 @@ class ActiveWorkoutScreenTest {
                     onDismissRestTimer = {},
                     onRetry = {},
                     onDismissError = {},
+                    timerServiceEnabled = false,
                 )
             }
         }
