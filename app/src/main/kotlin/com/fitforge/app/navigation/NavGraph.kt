@@ -10,6 +10,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.fitforge.app.presentation.analytics.AnalyticsOverviewScreen
 import com.fitforge.app.presentation.analytics.AnalyticsOverviewViewModel
+import com.fitforge.app.presentation.analytics.BodyProgressScreen
+import com.fitforge.app.presentation.analytics.BodyProgressViewModel
 import com.fitforge.app.presentation.home.HomeDashboardScreen
 import com.fitforge.app.presentation.home.HomeDashboardViewModel
 import com.fitforge.app.presentation.onboarding.auth.AuthScreen
@@ -167,6 +169,20 @@ fun NavGraph() {
             AnalyticsOverviewScreen(
                 uiState = uiState.value,
                 onRangeSelected = viewModel::onRangeSelected,
+                onOpenBodyProgress = { navController.navigate(Screen.BodyProgress.route) },
+            )
+        }
+        composable(Screen.BodyProgress.route) {
+            val viewModel: BodyProgressViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            BodyProgressScreen(
+                uiState = uiState.value,
+                onRangeSelected = viewModel::onRangeSelected,
+                onWeightChanged = viewModel::onWeightChanged,
+                onBodyFatChanged = viewModel::onBodyFatChanged,
+                onPhotoUriChanged = viewModel::onPhotoUriChanged,
+                onNoteChanged = viewModel::onNoteChanged,
+                onSaveMeasurement = viewModel::onSaveMeasurement,
             )
         }
         composable(Screen.Workouts.route) {
