@@ -32,6 +32,8 @@ import com.fitforge.app.presentation.onboarding.welcome.WelcomeScreen
 import com.fitforge.app.presentation.onboarding.welcome.WelcomeViewModel
 import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesScreen
 import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesViewModel
+import com.fitforge.app.presentation.profile.ProfileScreen
+import com.fitforge.app.presentation.profile.ProfileViewModel
 import com.fitforge.app.presentation.workouts.CreateCustomWorkoutScreen
 import com.fitforge.app.presentation.workouts.CreateCustomWorkoutViewModel
 import com.fitforge.app.presentation.workouts.ExerciseDetailScreen
@@ -185,6 +187,15 @@ fun NavGraph() {
                 onSaveMeasurement = viewModel::onSaveMeasurement,
             )
         }
+        composable(Screen.Profile.route) {
+            val viewModel: ProfileViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            ProfileScreen(
+                uiState = uiState.value,
+                onThemeSelected = viewModel::onThemeSelected,
+                onUnitSystemSelected = viewModel::onUnitSystemSelected,
+            )
+        }
         composable(Screen.Workouts.route) {
             val viewModel: WorkoutLibraryViewModel = hiltViewModel()
             val uiState = viewModel.uiState.collectAsStateWithLifecycle()
@@ -226,3 +237,5 @@ fun NavGraph() {
         }
     }
 }
+
+
