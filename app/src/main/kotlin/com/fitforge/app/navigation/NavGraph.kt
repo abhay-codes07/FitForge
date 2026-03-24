@@ -3,9 +3,11 @@ package com.fitforge.app.navigation
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.fitforge.app.presentation.home.HomeDashboardScreen
 import com.fitforge.app.presentation.home.HomeDashboardViewModel
 import com.fitforge.app.presentation.onboarding.auth.AuthScreen
@@ -26,6 +28,8 @@ import com.fitforge.app.presentation.onboarding.welcome.WelcomeScreen
 import com.fitforge.app.presentation.onboarding.welcome.WelcomeViewModel
 import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesScreen
 import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesViewModel
+import com.fitforge.app.presentation.workouts.ExerciseDetailScreen
+import com.fitforge.app.presentation.workouts.ExerciseDetailViewModel
 import com.fitforge.app.presentation.workouts.WorkoutLibraryScreen
 import com.fitforge.app.presentation.workouts.WorkoutLibraryViewModel
 
@@ -161,7 +165,18 @@ fun NavGraph() {
                 onQueryChanged = viewModel::onQueryChanged,
                 onCategorySelected = viewModel::onCategorySelected,
                 onDifficultySelected = viewModel::onDifficultySelected,
+                onExerciseClick = { exerciseId ->
+                    navController.navigate(Screen.ExerciseDetail.createRoute(exerciseId))
+                },
             )
+        }
+        composable(
+            route = Screen.ExerciseDetail.route,
+            arguments = listOf(navArgument("exerciseId") { type = NavType.StringType }),
+        ) {
+            val viewModel: ExerciseDetailViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            ExerciseDetailScreen(uiState = uiState.value)
         }
     }
 }
