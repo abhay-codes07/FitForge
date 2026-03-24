@@ -1,11 +1,13 @@
 package com.fitforge.app.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.fitforge.app.presentation.home.HomeDashboardScreen
+import com.fitforge.app.presentation.home.HomeDashboardViewModel
 import com.fitforge.app.presentation.onboarding.auth.AuthScreen
 import com.fitforge.app.presentation.onboarding.auth.AuthViewModel
 import com.fitforge.app.presentation.onboarding.bodymetrics.BodyMetricsScreen
@@ -139,6 +141,14 @@ fun NavGraph() {
                         popUpTo(Screen.Splash.route) { inclusive = true }
                     }
                 },
+            )
+        }
+        composable(Screen.Home.route) {
+            val viewModel: HomeDashboardViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            HomeDashboardScreen(
+                uiState = uiState.value,
+                onRefresh = viewModel::refresh,
             )
         }
     }
