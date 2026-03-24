@@ -26,6 +26,8 @@ import com.fitforge.app.presentation.onboarding.welcome.WelcomeScreen
 import com.fitforge.app.presentation.onboarding.welcome.WelcomeViewModel
 import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesScreen
 import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesViewModel
+import com.fitforge.app.presentation.workouts.WorkoutLibraryScreen
+import com.fitforge.app.presentation.workouts.WorkoutLibraryViewModel
 
 @Composable
 fun NavGraph() {
@@ -149,6 +151,16 @@ fun NavGraph() {
             HomeDashboardScreen(
                 uiState = uiState.value,
                 onRefresh = viewModel::refresh,
+            )
+        }
+        composable(Screen.Workouts.route) {
+            val viewModel: WorkoutLibraryViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            WorkoutLibraryScreen(
+                uiState = uiState.value,
+                onQueryChanged = viewModel::onQueryChanged,
+                onCategorySelected = viewModel::onCategorySelected,
+                onDifficultySelected = viewModel::onDifficultySelected,
             )
         }
     }
