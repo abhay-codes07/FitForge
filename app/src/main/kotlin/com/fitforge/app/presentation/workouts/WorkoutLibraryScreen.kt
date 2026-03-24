@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -39,6 +40,7 @@ fun WorkoutLibraryScreen(
     onCategorySelected: (String?) -> Unit,
     onDifficultySelected: (String?) -> Unit,
     onExerciseClick: (String) -> Unit,
+    onCreateCustomWorkoutClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -53,6 +55,13 @@ fun WorkoutLibraryScreen(
                 .testTag("workout_library_screen"),
             verticalArrangement = Arrangement.spacedBy(Spacing.sm),
         ) {
+            Button(
+                onClick = onCreateCustomWorkoutClick,
+                modifier = Modifier.fillMaxWidth().testTag("workout_create_custom"),
+            ) {
+                Text("Create Custom Workout")
+            }
+
             OutlinedTextField(
                 value = uiState.searchQuery,
                 onValueChange = onQueryChanged,
