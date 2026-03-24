@@ -1,5 +1,6 @@
 package com.fitforge.app.presentation.workouts
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -37,6 +38,7 @@ fun WorkoutLibraryScreen(
     onQueryChanged: (String) -> Unit,
     onCategorySelected: (String?) -> Unit,
     onDifficultySelected: (String?) -> Unit,
+    onExerciseClick: (String) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -110,7 +112,7 @@ fun WorkoutLibraryScreen(
                     verticalArrangement = Arrangement.spacedBy(Spacing.cardGap),
                 ) {
                     items(uiState.exercises, key = { it.id }) { item ->
-                        ExerciseCard(item = item)
+                        ExerciseCard(item = item, onClick = { onExerciseClick(item.id) })
                     }
                 }
             }
@@ -152,10 +154,14 @@ private fun FilterChips(
 }
 
 @Composable
-private fun ExerciseCard(item: WorkoutLibraryExerciseItem) {
+private fun ExerciseCard(
+    item: WorkoutLibraryExerciseItem,
+    onClick: () -> Unit,
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .testTag("workout_item_${item.id}"),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(containerColor = LightSurface1),

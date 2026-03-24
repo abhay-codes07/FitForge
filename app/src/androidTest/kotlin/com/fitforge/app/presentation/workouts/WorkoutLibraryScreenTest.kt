@@ -3,8 +3,10 @@ package com.fitforge.app.presentation.workouts
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import com.fitforge.app.presentation.theme.FitForgeTheme
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
@@ -13,7 +15,9 @@ class WorkoutLibraryScreenTest {
     val composeRule = createComposeRule()
 
     @Test
-    fun workoutLibrary_rendersListAndSearch() {
+    fun workoutLibrary_rendersListSearchAndClick() {
+        var clickedId: String? = null
+
         composeRule.setContent {
             FitForgeTheme {
                 WorkoutLibraryScreen(
@@ -36,6 +40,7 @@ class WorkoutLibraryScreenTest {
                     onQueryChanged = {},
                     onCategorySelected = {},
                     onDifficultySelected = {},
+                    onExerciseClick = { clickedId = it },
                 )
             }
         }
@@ -43,6 +48,8 @@ class WorkoutLibraryScreenTest {
         composeRule.onNodeWithTag("workout_library_screen").assertIsDisplayed()
         composeRule.onNodeWithTag("workout_search").performTextInput("bench")
         composeRule.onNodeWithTag("workout_item_e1").assertIsDisplayed()
+        composeRule.onNodeWithTag("workout_item_e1").performClick()
+        assertEquals("e1", clickedId)
     }
 
     @Test
@@ -54,6 +61,7 @@ class WorkoutLibraryScreenTest {
                     onQueryChanged = {},
                     onCategorySelected = {},
                     onDifficultySelected = {},
+                    onExerciseClick = {},
                 )
             }
         }
