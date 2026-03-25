@@ -18,6 +18,8 @@ import com.fitforge.app.presentation.analytics.AnalyticsOverviewScreen
 import com.fitforge.app.presentation.analytics.AnalyticsOverviewViewModel
 import com.fitforge.app.presentation.analytics.BodyProgressScreen
 import com.fitforge.app.presentation.analytics.BodyProgressViewModel
+import com.fitforge.app.presentation.gps_tracking.GpsTrackingScreen
+import com.fitforge.app.presentation.gps_tracking.GpsTrackingViewModel
 import com.fitforge.app.presentation.home.HomeDashboardScreen
 import com.fitforge.app.presentation.home.HomeDashboardViewModel
 import com.fitforge.app.presentation.onboarding.auth.AuthScreen
@@ -178,8 +180,27 @@ fun NavGraph() {
                 uiState = uiState.value,
                 onOptionSelected = { option ->
                     viewModel.onOptionSelected(option)
-                    navController.navigate(Screen.ActiveWorkout.route)
+                    val destination = if (option.equals("Run / Walk / Cycle", ignoreCase = true)) {
+                        Screen.GpsTracking.route
+                    } else {
+                        Screen.ActiveWorkout.route
+                    }
+                    navController.navigate(destination)
                 },
+            )
+        }
+        composable(Screen.GpsTracking.route) {
+            val viewModel: GpsTrackingViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            GpsTrackingScreen(
+                uiState = uiState.value,
+                onModeSelected = viewModel::onModeSelected,
+                onStartTracking = viewModel::onStartTrackingClick,
+                onStopTracking = viewModel::onStopTrackingClick,
+                onServiceStartHandled = viewModel::onServiceStartHandled,
+                onServiceStopHandled = viewModel::onServiceStopHandled,
+                onServiceStopped = viewModel::onServiceStopped,
+                onDismissError = viewModel::dismissError,
             )
         }
         composable(Screen.ActiveWorkout.route) {
