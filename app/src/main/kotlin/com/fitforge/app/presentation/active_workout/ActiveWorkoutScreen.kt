@@ -59,6 +59,7 @@ fun ActiveWorkoutScreen(
     onDismissRestTimer: () -> Unit,
     onRetry: () -> Unit,
     onDismissError: () -> Unit,
+    onViewSummary: () -> Unit,
     timerServiceEnabled: Boolean = true,
 ) {
     val context = LocalContext.current
@@ -221,6 +222,12 @@ fun ActiveWorkoutScreen(
                         color = Mint500,
                         modifier = Modifier.testTag("active_workout_complete"),
                     )
+                    Button(
+                        onClick = onViewSummary,
+                        modifier = Modifier.testTag("active_workout_view_summary"),
+                    ) {
+                        Text("View Summary")
+                    }
                 }
             }
         }

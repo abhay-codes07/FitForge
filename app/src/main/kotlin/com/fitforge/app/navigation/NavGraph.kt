@@ -12,6 +12,8 @@ import com.fitforge.app.presentation.active_workout.ActiveWorkoutScreen
 import com.fitforge.app.presentation.active_workout.ActiveWorkoutViewModel
 import com.fitforge.app.presentation.active_workout.StartWorkoutScreen
 import com.fitforge.app.presentation.active_workout.StartWorkoutViewModel
+import com.fitforge.app.presentation.active_workout.WorkoutSummaryScreen
+import com.fitforge.app.presentation.active_workout.WorkoutSummaryViewModel
 import com.fitforge.app.presentation.analytics.AnalyticsOverviewScreen
 import com.fitforge.app.presentation.analytics.AnalyticsOverviewViewModel
 import com.fitforge.app.presentation.analytics.BodyProgressScreen
@@ -194,6 +196,21 @@ fun NavGraph() {
                 onDismissRestTimer = viewModel::onDismissRestTimer,
                 onRetry = viewModel::retry,
                 onDismissError = viewModel::onDismissError,
+                onViewSummary = { navController.navigate(Screen.WorkoutSummary.route) },
+            )
+        }
+        composable(Screen.WorkoutSummary.route) {
+            val viewModel: WorkoutSummaryViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            WorkoutSummaryScreen(
+                uiState = uiState.value,
+                onDoneClick = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.ActiveWorkout.route) { inclusive = true }
+                    }
+                },
+                onRetry = viewModel::retry,
+                onDismissError = viewModel::dismissError,
             )
         }
         composable(Screen.Analytics.route) {
