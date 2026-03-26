@@ -58,4 +58,21 @@ class GpsTrackingViewModelTest {
         assertEquals("GPS unavailable", viewModel.uiState.value.errorMessage)
         assertEquals(false, viewModel.uiState.value.isTracking)
     }
+
+    @Test
+    fun `dismiss error clears error message`() = runTest(dispatcher) {
+        val createUseCase = mockk<CreateGpsWorkoutSessionUseCase>()
+        val observeUseCase = mockk<ObserveGpsRoutePointsUseCase>()
+        val completeUseCase = mockk<CompleteGpsWorkoutSessionUseCase>()
+
+        coEvery { createUseCase.invoke(any(), any()) } throws IllegalStateException("GPS unavailable")
+
+        val viewModel = GpsTrackingViewModel(createUseCase, observeUseCase, completeUseCase)
+        viewModel.onStartTrackingClick()
+        advanceUntilIdle()
+
+        viewModel.dismissError()
+
+        assertEquals(null, viewModel.uiState.value.errorMessage)
+    }
 }

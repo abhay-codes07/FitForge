@@ -1,9 +1,7 @@
 package com.fitforge.app.presentation.gps_tracking
 
-import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fitforge.app.data.local.db.entity.GpsRoutePointEntity
 import com.fitforge.app.domain.usecase.gps_tracking.CompleteGpsWorkoutSessionUseCase
 import com.fitforge.app.domain.usecase.gps_tracking.CreateGpsWorkoutSessionUseCase
 import com.fitforge.app.domain.usecase.gps_tracking.ObserveGpsRoutePointsUseCase
@@ -112,13 +110,10 @@ class GpsTrackingViewModel @Inject constructor(
         observeRouteJob?.cancel()
         observeRouteJob = viewModelScope.launch {
             observeGpsRoutePointsUseCase(workoutId).collect { points ->
-                val distanceMeters = calculateDistance(points)
-                val currentSpeed = calculateCurrentSpeed(points)
+                val distanceMeters = GpsMetricsCalculator.calculateDistanceMeters(points)
+                val currentSpeed = GpsMetricsCalculator.calculateCurrentSpeedMetersPerSecond(points)
                 val elapsed = _uiState.value.elapsedSeconds.coerceAtLeast(1L)
-                val avgPace = if (distanceMeters <= 0f) 0f else {
-                    val distanceKm = distanceMeters / 1000f
-                    (elapsed / 60f) / distanceKm
-                }
+                val avgPace = GpsMetricsCalculator.calculateAveragePaceMinPerKm(distanceMeters, elapsed)
 
                 _uiState.update {
                     it.copy(
@@ -140,42 +135,5 @@ class GpsTrackingViewModel @Inject constructor(
                 _uiState.update { it.copy(elapsedSeconds = it.elapsedSeconds + 1) }
             }
         }
-    }
-
-    private fun calculateDistance(points: List<GpsRoutePointEntity>): Float {
-        if (points.size < 2) return 0f
-
-        var total = 0f
-        for (i in 1 until points.size) {
-            val prev = points[i - 1]
-            val current = points[i]
-            val results = FloatArray(1)
-            Location.distanceBetween(
-                prev.latitude,
-                prev.longitude,
-                current.latitude,
-                current.longitude,
-                results,
-            )
-            total += results[0]
-        }
-        return total
-    }
-
-    private fun calculateCurrentSpeed(points: List<GpsRoutePointEntity>): Float {
-        if (points.size < 2) return 0f
-
-        val prev = points[points.lastIndex - 1]
-        val current = points.last()
-        val results = FloatArray(1)
-        Location.distanceBetween(
-            prev.latitude,
-            prev.longitude,
-            current.latitude,
-            current.longitude,
-            results,
-        )
-        val dtMillis = (current.timestampEpochMillis - prev.timestampEpochMillis).coerceAtLeast(1L)
-        return results[0] / (dtMillis / 1000f)
     }
 }

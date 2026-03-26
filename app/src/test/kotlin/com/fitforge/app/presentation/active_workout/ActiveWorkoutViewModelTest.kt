@@ -92,6 +92,42 @@ class ActiveWorkoutViewModelTest {
         assertTrue(viewModel.uiState.value.isWorkoutCompleted)
     }
 
+    @Test
+    fun `completing intermediate set starts rest timer and advances set count`() = runTest(dispatcher) {
+        val getUseCase = mockk<GetActiveWorkoutSessionUseCase>()
+        val logUseCase = mockk<LogCompletedSetUseCase>(relaxed = true)
+        val completeUseCase = mockk<CompleteWorkoutUseCase>(relaxed = true)
+
+        coEvery { getUseCase.invoke(any()) } returns multiSetSessionData()
+
+        val viewModel = ActiveWorkoutViewModel(getUseCase, logUseCase, completeUseCase)
+        advanceUntilIdle()
+
+        viewModel.onCompleteSet()
+        advanceUntilIdle()
+
+        assertEquals(2, viewModel.uiState.value.currentSet)
+        assertTrue(viewModel.uiState.value.restSecondsRemaining >= 0)
+    }
+
+    @Test
+    fun `dismiss rest timer clears remaining seconds`() = runTest(dispatcher) {
+        val getUseCase = mockk<GetActiveWorkoutSessionUseCase>()
+        val logUseCase = mockk<LogCompletedSetUseCase>(relaxed = true)
+        val completeUseCase = mockk<CompleteWorkoutUseCase>(relaxed = true)
+
+        coEvery { getUseCase.invoke(any()) } returns multiSetSessionData()
+
+        val viewModel = ActiveWorkoutViewModel(getUseCase, logUseCase, completeUseCase)
+        advanceUntilIdle()
+
+        viewModel.onCompleteSet()
+        advanceUntilIdle()
+        viewModel.onDismissRestTimer()
+
+        assertEquals(0, viewModel.uiState.value.restSecondsRemaining)
+    }
+
     private fun sessionData(): ActiveWorkoutSessionData = ActiveWorkoutSessionData(
         workoutId = "w1",
         workoutTitle = "Leg Day",
@@ -118,4 +154,23 @@ class ActiveWorkoutViewModelTest {
         currentExerciseIndex = 0,
         completedSetCounts = emptyMap(),
     )
+
+    private fun multiSetSessionData(): ActiveWorkoutSessionData = ActiveWorkoutSessionData(
+        workoutId = "w2",
+        workoutTitle = "Strength",
+        exercises = listOf(
+            ActiveWorkoutExerciseStep(
+                workoutExerciseId = "we10",
+                exerciseId = "e10",
+                exerciseName = "Bench Press",
+                imageUrl = null,
+                targetSets = 2,
+                targetReps = 8,
+                restSeconds = 30,
+            ),
+        ),
+        currentExerciseIndex = 0,
+        completedSetCounts = emptyMap(),
+    )
 }
+
