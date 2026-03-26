@@ -8,10 +8,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.fitforge.app.presentation.active_workout.ActiveWorkoutScreen
+import com.fitforge.app.presentation.active_workout.ActiveWorkoutViewModel
+import com.fitforge.app.presentation.active_workout.StartWorkoutScreen
+import com.fitforge.app.presentation.active_workout.StartWorkoutViewModel
+import com.fitforge.app.presentation.active_workout.WorkoutSummaryScreen
+import com.fitforge.app.presentation.active_workout.WorkoutSummaryViewModel
 import com.fitforge.app.presentation.analytics.AnalyticsOverviewScreen
 import com.fitforge.app.presentation.analytics.AnalyticsOverviewViewModel
 import com.fitforge.app.presentation.analytics.BodyProgressScreen
 import com.fitforge.app.presentation.analytics.BodyProgressViewModel
+import com.fitforge.app.presentation.gps_tracking.GpsTrackingScreen
+import com.fitforge.app.presentation.gps_tracking.GpsTrackingViewModel
 import com.fitforge.app.presentation.home.HomeDashboardScreen
 import com.fitforge.app.presentation.home.HomeDashboardViewModel
 import com.fitforge.app.presentation.onboarding.auth.AuthScreen
@@ -165,6 +173,67 @@ fun NavGraph() {
                 onRefresh = viewModel::refresh,
             )
         }
+        composable(Screen.StartWorkout.route) {
+            val viewModel: StartWorkoutViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            StartWorkoutScreen(
+                uiState = uiState.value,
+                onOptionSelected = { option ->
+                    viewModel.onOptionSelected(option)
+                    val destination = if (option.equals("Run / Walk / Cycle", ignoreCase = true)) {
+                        Screen.GpsTracking.route
+                    } else {
+                        Screen.ActiveWorkout.route
+                    }
+                    navController.navigate(destination)
+                },
+            )
+        }
+        composable(Screen.GpsTracking.route) {
+            val viewModel: GpsTrackingViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            GpsTrackingScreen(
+                uiState = uiState.value,
+                onModeSelected = viewModel::onModeSelected,
+                onStartTracking = viewModel::onStartTrackingClick,
+                onStopTracking = viewModel::onStopTrackingClick,
+                onServiceStartHandled = viewModel::onServiceStartHandled,
+                onServiceStopHandled = viewModel::onServiceStopHandled,
+                onServiceStopped = viewModel::onServiceStopped,
+                onDismissError = viewModel::dismissError,
+            )
+        }
+        composable(Screen.ActiveWorkout.route) {
+            val viewModel: ActiveWorkoutViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            ActiveWorkoutScreen(
+                uiState = uiState.value,
+                onClose = { navController.popBackStack() },
+                onShuffle = viewModel::onShuffleExercise,
+                onSkip = viewModel::onSkipExercise,
+                onRepIncrement = viewModel::onRepIncrement,
+                onRepDecrement = viewModel::onRepDecrement,
+                onCompleteSet = { viewModel.onCompleteSet() },
+                onDismissRestTimer = viewModel::onDismissRestTimer,
+                onRetry = viewModel::retry,
+                onDismissError = viewModel::onDismissError,
+                onViewSummary = { navController.navigate(Screen.WorkoutSummary.route) },
+            )
+        }
+        composable(Screen.WorkoutSummary.route) {
+            val viewModel: WorkoutSummaryViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            WorkoutSummaryScreen(
+                uiState = uiState.value,
+                onDoneClick = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.ActiveWorkout.route) { inclusive = true }
+                    }
+                },
+                onRetry = viewModel::retry,
+                onDismissError = viewModel::dismissError,
+            )
+        }
         composable(Screen.Analytics.route) {
             val viewModel: AnalyticsOverviewViewModel = hiltViewModel()
             val uiState = viewModel.uiState.collectAsStateWithLifecycle()
@@ -237,5 +306,3 @@ fun NavGraph() {
         }
     }
 }
-
-
