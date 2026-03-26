@@ -9,7 +9,10 @@ data class AuthUiState(
     val passwordError: String? = null,
     val authMethod: String = UserPrefs.AuthMethod.NONE,
     val destinationRoute: String? = null,
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val infoMessage: String? = null,
 ) {
     val canContinueWithEmail: Boolean
-        get() = email.isNotBlank() && password.isNotBlank()
+        get() = !isLoading && email.isNotBlank() && password.isNotBlank()
 }

@@ -3,8 +3,13 @@ package com.fitforge.app.presentation.onboarding.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fitforge.app.data.local.datastore.UserPrefs
+import com.fitforge.app.domain.model.auth.AuthResult
 import com.fitforge.app.domain.usecase.onboarding.CompleteOnboardingWithAuthUseCase
 import com.fitforge.app.domain.usecase.onboarding.GetAuthDraftUseCase
+import com.fitforge.app.domain.usecase.onboarding.SendPasswordResetUseCase
+import com.fitforge.app.domain.usecase.onboarding.SignInAnonymouslyUseCase
+import com.fitforge.app.domain.usecase.onboarding.SignInWithEmailUseCase
+import com.fitforge.app.domain.usecase.onboarding.SignInWithGoogleUseCase
 import com.fitforge.app.domain.usecase.onboarding.ValidateAuthCredentialsUseCase
 import com.fitforge.app.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +24,10 @@ import kotlinx.coroutines.launch
 class AuthViewModel @Inject constructor(
     private val getAuthDraftUseCase: GetAuthDraftUseCase,
     private val validateAuthCredentialsUseCase: ValidateAuthCredentialsUseCase,
+    private val signInWithEmailUseCase: SignInWithEmailUseCase,
+    private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
+    private val signInAnonymouslyUseCase: SignInAnonymouslyUseCase,
+    private val sendPasswordResetUseCase: SendPasswordResetUseCase,
     private val completeOnboardingWithAuthUseCase: CompleteOnboardingWithAuthUseCase,
 ) : ViewModel() {
 
@@ -38,11 +47,11 @@ class AuthViewModel @Inject constructor(
     }
 
     fun onEmailChanged(value: String) {
-        _uiState.update { it.copy(email = value, emailError = null) }
+        _uiState.update { it.copy(email = value, emailError = null, errorMessage = null, infoMessage = null) }
     }
 
     fun onPasswordChanged(value: String) {
-        _uiState.update { it.copy(password = value, passwordError = null) }
+        _uiState.update { it.copy(password = value, passwordError = null, errorMessage = null, infoMessage = null) }
     }
 
     fun onEmailContinueClick() {
@@ -58,27 +67,127 @@ class AuthViewModel @Inject constructor(
             return
         }
 
-        complete(UserPrefs.AuthMethod.EMAIL, current.email.trim())
+        runAuthAction {
+            when (val result = signInWithEmailUseCase(current.email, current.password)) {
+                is AuthResult.Success -> {
+                    complete(
+                        authMethod = UserPrefs.AuthMethod.EMAIL,
+                        email = result.user.email ?: current.email.trim(),
+                    )
+                }
+
+                is AuthResult.Failure -> {
+                    _uiState.update { it.copy(isLoading = false, errorMessage = result.message) }
+                }
+            }
+        }
     }
 
-    fun onGoogleContinueClick() {
-        val email = uiState.value.email.trim().takeIf { it.isNotBlank() }
-        complete(UserPrefs.AuthMethod.GOOGLE, email)
+    fun onGoogleIdTokenReceived(idToken: String) {
+        if (idToken.isBlank()) {
+            _uiState.update { it.copy(errorMessage = "Google Sign-In failed. Please try again.") }
+            return
+        }
+
+        runAuthAction {
+            when (val result = signInWithGoogleUseCase(idToken)) {
+                is AuthResult.Success -> {
+                    complete(
+                        authMethod = UserPrefs.AuthMethod.GOOGLE,
+                        email = result.user.email,
+                    )
+                }
+
+                is AuthResult.Failure -> {
+                    _uiState.update { it.copy(isLoading = false, errorMessage = result.message) }
+                }
+            }
+        }
+    }
+
+    fun onGoogleSignInFailed(message: String) {
+        _uiState.update {
+            it.copy(
+                isLoading = false,
+                errorMessage = if (message.isBlank()) "Google Sign-In failed. Please try again." else message,
+            )
+        }
     }
 
     fun onGuestContinueClick() {
-        complete(UserPrefs.AuthMethod.ANONYMOUS, null)
+        runAuthAction {
+            when (val result = signInAnonymouslyUseCase()) {
+                is AuthResult.Success -> {
+                    complete(
+                        authMethod = UserPrefs.AuthMethod.ANONYMOUS,
+                        email = result.user.email,
+                    )
+                }
+
+                is AuthResult.Failure -> {
+                    _uiState.update { it.copy(isLoading = false, errorMessage = result.message) }
+                }
+            }
+        }
     }
 
-    private fun complete(authMethod: String, email: String?) {
-        viewModelScope.launch {
-            completeOnboardingWithAuthUseCase(authMethod = authMethod, email = email)
+    fun onPasswordResetClick() {
+        val email = uiState.value.email
+        val emailError = validateAuthCredentialsUseCase.validateEmail(email)
+        if (emailError != null) {
             _uiState.update {
                 it.copy(
-                    authMethod = authMethod,
-                    destinationRoute = Screen.Home.route,
+                    emailError = emailError,
+                    errorMessage = null,
+                    infoMessage = null,
                 )
             }
+            return
+        }
+
+        runAuthAction {
+            sendPasswordResetUseCase(email)
+                .onSuccess {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            infoMessage = "Password reset link sent to ${email.trim()}.",
+                            errorMessage = null,
+                        )
+                    }
+                }
+                .onFailure { throwable ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = throwable.message ?: "Failed to send password reset email.",
+                            infoMessage = null,
+                        )
+                    }
+                }
+        }
+    }
+
+    fun onNavigationHandled() {
+        _uiState.update { it.copy(destinationRoute = null) }
+    }
+
+    private fun runAuthAction(action: suspend () -> Unit) {
+        if (uiState.value.isLoading) return
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null, infoMessage = null) }
+            action()
+        }
+    }
+
+    private suspend fun complete(authMethod: String, email: String?) {
+        completeOnboardingWithAuthUseCase(authMethod = authMethod, email = email)
+        _uiState.update {
+            it.copy(
+                isLoading = false,
+                authMethod = authMethod,
+                destinationRoute = Screen.Home.route,
+            )
         }
     }
 }

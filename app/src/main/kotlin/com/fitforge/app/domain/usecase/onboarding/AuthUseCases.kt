@@ -30,11 +30,7 @@ class ValidateAuthCredentialsUseCase @Inject constructor() {
 
     operator fun invoke(email: String, password: String): AuthValidationResult {
         val normalizedEmail = email.trim()
-        val emailError = when {
-            normalizedEmail.isBlank() -> "Enter an email address."
-            !EMAIL_REGEX.matches(normalizedEmail) -> "Enter a valid email address."
-            else -> null
-        }
+        val emailError = validateEmail(normalizedEmail)
         val passwordError = when {
             password.isBlank() -> "Enter a password."
             password.length < 8 -> "Password must be at least 8 characters."
@@ -45,6 +41,15 @@ class ValidateAuthCredentialsUseCase @Inject constructor() {
             emailError = emailError,
             passwordError = passwordError,
         )
+    }
+
+    fun validateEmail(email: String): String? {
+        val normalizedEmail = email.trim()
+        return when {
+            normalizedEmail.isBlank() -> "Enter an email address."
+            !EMAIL_REGEX.matches(normalizedEmail) -> "Enter a valid email address."
+            else -> null
+        }
     }
 }
 

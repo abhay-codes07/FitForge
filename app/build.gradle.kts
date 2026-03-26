@@ -96,6 +96,7 @@ dependencies {
     implementation(libs.play.billing.ktx)
     implementation(libs.play.services.ads)
     implementation(libs.play.services.location)
+    implementation(libs.play.services.auth)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
@@ -123,6 +124,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
+
+
 
 
 
