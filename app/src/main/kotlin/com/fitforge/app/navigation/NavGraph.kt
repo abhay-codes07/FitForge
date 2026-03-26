@@ -156,13 +156,16 @@ fun NavGraph() {
                 onEmailChanged = viewModel::onEmailChanged,
                 onPasswordChanged = viewModel::onPasswordChanged,
                 onEmailContinue = viewModel::onEmailContinueClick,
-                onGoogleContinue = viewModel::onGoogleContinueClick,
+                onGoogleIdTokenReceived = viewModel::onGoogleIdTokenReceived,
+                onGoogleSignInFailed = viewModel::onGoogleSignInFailed,
+                onPasswordReset = viewModel::onPasswordResetClick,
                 onGuestContinue = viewModel::onGuestContinueClick,
                 onNavigateNext = { route ->
                     navController.navigate(route) {
                         popUpTo(Screen.Splash.route) { inclusive = true }
                     }
                 },
+                onNavigationHandled = viewModel::onNavigationHandled,
             )
         }
         composable(Screen.Home.route) {
@@ -306,3 +309,6 @@ fun NavGraph() {
         }
     }
 }
+
+
+

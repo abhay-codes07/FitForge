@@ -6,6 +6,7 @@ import com.fitforge.app.data.repository.ChallengeRepositoryImpl
 import com.fitforge.app.data.repository.DailyLogRepositoryImpl
 import com.fitforge.app.data.repository.ExerciseRepositoryImpl
 import com.fitforge.app.data.repository.ExerciseSetRepositoryImpl
+import com.fitforge.app.data.repository.FirebaseAuthRepositoryImpl
 import com.fitforge.app.data.repository.GpsRoutePointRepositoryImpl
 import com.fitforge.app.data.repository.OnboardingRepositoryImpl
 import com.fitforge.app.data.repository.PersonalRecordRepositoryImpl
@@ -15,6 +16,7 @@ import com.fitforge.app.data.repository.WelcomeRepositoryImpl
 import com.fitforge.app.data.repository.WorkoutExerciseRepositoryImpl
 import com.fitforge.app.data.repository.WorkoutRepositoryImpl
 import com.fitforge.app.domain.repository.AchievementRepository
+import com.fitforge.app.domain.repository.AuthRepository
 import com.fitforge.app.domain.repository.BodyMeasurementRepository
 import com.fitforge.app.domain.repository.ChallengeRepository
 import com.fitforge.app.domain.repository.DailyLogRepository
@@ -36,6 +38,11 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+    @Binds
+    abstract fun bindAuthRepository(
+        authRepositoryImpl: FirebaseAuthRepositoryImpl,
+    ): AuthRepository
+
     @Binds
     abstract fun bindOnboardingRepository(
         onboardingRepositoryImpl: OnboardingRepositoryImpl,

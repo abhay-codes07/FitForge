@@ -30,9 +30,12 @@ class AuthScreenTest {
                     onEmailChanged = { uiState = uiState.copy(email = it) },
                     onPasswordChanged = { uiState = uiState.copy(password = it) },
                     onEmailContinue = { continueClicks++ },
-                    onGoogleContinue = { continueClicks++ },
+                    onGoogleIdTokenReceived = { },
+                    onGoogleSignInFailed = { },
+                    onPasswordReset = { },
                     onGuestContinue = { continueClicks++ },
                     onNavigateNext = { },
+                    onNavigationHandled = { },
                 )
             }
         }
@@ -56,9 +59,12 @@ class AuthScreenTest {
                     onEmailChanged = { uiState = uiState.copy(email = it) },
                     onPasswordChanged = { uiState = uiState.copy(password = it) },
                     onEmailContinue = { continueClicks++ },
-                    onGoogleContinue = { },
+                    onGoogleIdTokenReceived = { },
+                    onGoogleSignInFailed = { },
+                    onPasswordReset = { },
                     onGuestContinue = { },
                     onNavigateNext = { },
+                    onNavigationHandled = { },
                 )
             }
         }
