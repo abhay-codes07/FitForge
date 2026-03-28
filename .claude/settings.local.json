@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew test:*)",
+      "Bash(gradlew.bat test:*)",
+      "Bash(Select-Object -First 150)",
+      "Bash(cmd /c gradlew.bat test --tests \"com.fitforge.app.domain.usecase.sync.WorkoutCloudSyncUseCasesTest\" --continue)",
+      "Bash(cmd /c \"gradlew.bat compileDebugKotlin --console=plain 2>&1\")",
+      "Bash(cmd /c \"gradlew.bat compileDebugKotlin 2>&1\")",
+      "Bash(cmd /c \"gradlew.bat compileDebugKotlin 2>&1 | Select-Object -First 150\")",
+      "Bash(cmd /c:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

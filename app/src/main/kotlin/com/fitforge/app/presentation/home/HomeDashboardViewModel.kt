@@ -3,6 +3,7 @@ package com.fitforge.app.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fitforge.app.domain.usecase.home.GetHomeDashboardDataUseCase
+import com.fitforge.app.domain.usecase.sync.SyncAllDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class HomeDashboardViewModel @Inject constructor(
     private val getHomeDashboardDataUseCase: GetHomeDashboardDataUseCase,
+    private val syncAllDataUseCase: SyncAllDataUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeDashboardUiState())
     val uiState: StateFlow<HomeDashboardUiState> = _uiState.asStateFlow()
@@ -25,7 +27,12 @@ class HomeDashboardViewModel @Inject constructor(
     fun refresh() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-            runCatching { getHomeDashboardDataUseCase() }
+            runCatching {
+                syncAllDataUseCase().onFailure {
+                    // Sync failure should not block dashboard render.
+                }
+                getHomeDashboardDataUseCase()
+            }
                 .onSuccess { data ->
                     _uiState.value = HomeDashboardUiState(
                         isLoading = false,

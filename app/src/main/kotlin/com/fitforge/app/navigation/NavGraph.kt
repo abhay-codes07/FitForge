@@ -40,8 +40,18 @@ import com.fitforge.app.presentation.onboarding.welcome.WelcomeScreen
 import com.fitforge.app.presentation.onboarding.welcome.WelcomeViewModel
 import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesScreen
 import com.fitforge.app.presentation.onboarding.workoutpreferences.WorkoutPreferencesViewModel
+import com.fitforge.app.presentation.achievements.AchievementsScreen
+import com.fitforge.app.presentation.achievements.AchievementsViewModel
+import com.fitforge.app.presentation.challenges.ChallengesScreen
+import com.fitforge.app.presentation.challenges.ChallengesViewModel
+import com.fitforge.app.presentation.dailylog.DailyLogScreen
+import com.fitforge.app.presentation.dailylog.DailyLogViewModel
 import com.fitforge.app.presentation.profile.ProfileScreen
+import com.fitforge.app.presentation.programs.ProgramsScreen
+import com.fitforge.app.presentation.programs.ProgramsViewModel
 import com.fitforge.app.presentation.profile.ProfileViewModel
+import com.fitforge.app.presentation.workouthistory.WorkoutHistoryScreen
+import com.fitforge.app.presentation.workouthistory.WorkoutHistoryViewModel
 import com.fitforge.app.presentation.workouts.CreateCustomWorkoutScreen
 import com.fitforge.app.presentation.workouts.CreateCustomWorkoutViewModel
 import com.fitforge.app.presentation.workouts.ExerciseDetailScreen
@@ -306,6 +316,55 @@ fun NavGraph() {
             val viewModel: ExerciseDetailViewModel = hiltViewModel()
             val uiState = viewModel.uiState.collectAsStateWithLifecycle()
             ExerciseDetailScreen(uiState = uiState.value)
+        }
+        composable(Screen.Achievements.route) {
+            val viewModel: AchievementsViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            AchievementsScreen(
+                uiState = uiState.value,
+                onCategorySelected = viewModel::onCategorySelected,
+                onClaimAchievement = viewModel::onClaimAchievement,
+                onDismissError = viewModel::dismissError,
+            )
+        }
+        composable(Screen.Challenges.route) {
+            val viewModel: ChallengesViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            ChallengesScreen(
+                uiState = uiState.value,
+                onTabSelected = viewModel::onTabSelected,
+                onJoinChallenge = viewModel::onJoinChallenge,
+                onLeaveChallenge = viewModel::onLeaveChallenge,
+                onDeleteChallenge = viewModel::onDeleteChallenge,
+                onDismissError = viewModel::dismissError,
+            )
+        }
+        composable(Screen.Programs.route) {
+            val viewModel: ProgramsViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            ProgramsScreen(
+                uiState = uiState.value,
+                onGoalSelected = viewModel::onGoalSelected,
+                onDismissError = viewModel::dismissError,
+            )
+        }
+        composable(Screen.DailyLog.route) {
+            val viewModel: DailyLogViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            DailyLogScreen(
+                uiState = uiState.value,
+                onAddWater = viewModel::onAddWater,
+                onDismissError = viewModel::dismissError,
+            )
+        }
+        composable(Screen.WorkoutHistory.route) {
+            val viewModel: WorkoutHistoryViewModel = hiltViewModel()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            WorkoutHistoryScreen(
+                uiState = uiState.value,
+                onRefresh = viewModel::refresh,
+                onDismissError = viewModel::dismissError,
+            )
         }
     }
 }

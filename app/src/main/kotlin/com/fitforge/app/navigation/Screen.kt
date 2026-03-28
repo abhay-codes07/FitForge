@@ -23,4 +23,13 @@ sealed class Screen(val route: String) {
     data object WorkoutSummary : Screen("workout_summary")
     data object GpsTracking : Screen("gps_tracking")
     data object Profile : Screen("profile")
+    data object Achievements : Screen("achievements")
+    data object Challenges : Screen("challenges")
+    data object Programs : Screen("programs")
+    data object DailyLog : Screen("daily_log")
+    data object WorkoutHistory : Screen("workout_history")
+    data object Social : Screen("social")
+    data object Nutrition : Screen("nutrition")
+    data object Templates : Screen("templates")
+    data object Recovery : Screen("recovery")
 }

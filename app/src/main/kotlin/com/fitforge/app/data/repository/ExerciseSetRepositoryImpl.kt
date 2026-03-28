@@ -14,6 +14,9 @@ class ExerciseSetRepositoryImpl @Inject constructor(
     override fun observeSetsForWorkoutExercise(workoutExerciseId: String): Flow<List<ExerciseSetEntity>> =
         exerciseSetDao.observeSetsForWorkoutExercise(workoutExerciseId)
 
+    override suspend fun getSetsForWorkout(workoutId: String): List<ExerciseSetEntity> =
+        exerciseSetDao.getSetsForWorkout(workoutId)
+
     override suspend fun getSetsForWorkoutExercise(workoutExerciseId: String): List<ExerciseSetEntity> =
         exerciseSetDao.getSetsForWorkoutExercise(workoutExerciseId)
 

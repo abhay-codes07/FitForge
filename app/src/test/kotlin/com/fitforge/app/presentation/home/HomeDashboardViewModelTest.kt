@@ -2,6 +2,8 @@ package com.fitforge.app.presentation.home
 
 import com.fitforge.app.domain.usecase.home.GetHomeDashboardDataUseCase
 import com.fitforge.app.domain.usecase.home.HomeDashboardData
+import com.fitforge.app.domain.usecase.sync.SyncAllDataUseCase
+import com.fitforge.app.domain.usecase.sync.SyncResult
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +36,8 @@ class HomeDashboardViewModelTest {
     @Test
     fun `loads dashboard data on init`() = runTest(dispatcher) {
         val useCase = mockk<GetHomeDashboardDataUseCase>()
+        val syncAllDataUseCase = mockk<SyncAllDataUseCase>()
+        coEvery { syncAllDataUseCase.invoke() } returns Result.success(SyncResult(1, true, null))
         coEvery { useCase.invoke(any(), any()) } returns HomeDashboardData(
             isGuest = false,
             greetingName = "Abhay",
@@ -46,7 +50,7 @@ class HomeDashboardViewModelTest {
             recentWorkoutTitles = listOf("Push Day", "Core Blast"),
         )
 
-        val viewModel = HomeDashboardViewModel(useCase)
+        val viewModel = HomeDashboardViewModel(useCase, syncAllDataUseCase)
         advanceUntilIdle()
 
         assertEquals(false, viewModel.uiState.value.isLoading)
@@ -58,9 +62,11 @@ class HomeDashboardViewModelTest {
     @Test
     fun `shows error when loading fails`() = runTest(dispatcher) {
         val useCase = mockk<GetHomeDashboardDataUseCase>()
+        val syncAllDataUseCase = mockk<SyncAllDataUseCase>()
+        coEvery { syncAllDataUseCase.invoke() } returns Result.success(SyncResult(0, false, null))
         coEvery { useCase.invoke(any(), any()) } throws IllegalStateException("boom")
 
-        val viewModel = HomeDashboardViewModel(useCase)
+        val viewModel = HomeDashboardViewModel(useCase, syncAllDataUseCase)
         advanceUntilIdle()
 
         assertEquals(false, viewModel.uiState.value.isLoading)
